@@ -16,6 +16,17 @@
 #define BIGBUF 512
 
 void makeMsg(char *, char *, char *,char *, char *);
+void showTables();
+void showTables(){
+    char c;
+FILE *file;
+file = fopen("tables.txt", "r");
+if (file) {
+    while ((c = getc(file)) != EOF)
+        putchar(c);
+    fclose(file);
+}
+}
 
 void makeMsg(char *_date, char *_table, char *_couvert, char *_resid, char *_msg)
 {
@@ -83,8 +94,9 @@ int main(int argc, char const *argv[])
         memset(clientResponse, 0, SMALLBUF);
         memset(bigClientResp, 0, BIGBUF);
         valread=0;
-        printf("\nTABLES:\n For 5 people - 1, 3,12\n For 6 people - 2, 4, 6, 8\n For 10 people - 5, 7, 9, 10, 11\n");
-        printf("-----MENU-----\n 1.Check date\n 2. Add new Reservation\n 3. Add Total Sum for existing Reservation\n 4. Delete a Reservation\n 5.Quit\n 6.Backup all Reservations\n 7,Check daily Income for Specified date\n");
+        showTables();
+       // printf("\nTABLES:\n For 5 people - 1, 3,12\n For 6 people - 2, 4, 6, 8\n For 10 people - 5, 7, 9, 10, 11\n");
+        printf("\n-----MENU-----\n 1.Check date\n 2. Add new Reservation\n 3. Add Total Sum for existing Reservation\n 4. Delete a Reservation\n 5.Quit\n 6.Backup all Reservations\n 7,Check daily Income for Specified date\n");
         scanf("%s", clientResponse);
         send(sock, clientResponse, SMALLBUF, 0);    
         if (!strcmp(clientResponse, "5"))
