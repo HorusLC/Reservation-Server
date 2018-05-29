@@ -15,6 +15,20 @@
 #define MIDBUF 256
 #define BIGBUF 512
 
+void makeMsg(char *, char *, char *,char *, char *);
+
+void makeMsg(char *_date, char *_table, char *_couvert, char *_resid, char *_msg)
+{
+    strcat(_resid, "*");
+    strcat(_table, "*");
+    strcat(_date, "*");
+    strcat(_couvert, "*");
+    strcpy(_msg,_table);
+    strcat(_msg,_date);
+    strcat(_msg,_couvert);
+    strcat(_msg,_resid);
+}
+
 int main(int argc, char const *argv[])
 {
     struct sockaddr_in address;
@@ -32,7 +46,6 @@ int main(int argc, char const *argv[])
     struct timeval timeout;
     timeout.tv_sec = 10;
     timeout.tv_usec = 0;
-
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         printf("\n Socket creation error \n");
@@ -69,10 +82,11 @@ int main(int argc, char const *argv[])
         memset(serverResponse, 0, MIDBUF);
         memset(clientResponse, 0, SMALLBUF);
         memset(bigClientResp, 0, BIGBUF);
+        valread=0;
         printf("\nTABLES:\n For 5 people - 1, 3,12\n For 6 people - 2, 4, 6, 8\n For 10 people - 5, 7, 9, 10, 11\n");
         printf("-----MENU-----\n 1.Check date\n 2. Add new Reservation\n 3. Add Total Sum for existing Reservation\n 4. Delete a Reservation\n 5.Quit\n 6.Backup all Reservations\n 7,Check daily Income for Specified date\n");
         scanf("%s", clientResponse);
-        send(sock, clientResponse, SMALLBUF, 0);
+        send(sock, clientResponse, SMALLBUF, 0);    
         if (!strcmp(clientResponse, "5"))
         {
             shutdown(sock, SHUT_RDWR);
@@ -102,19 +116,11 @@ int main(int argc, char const *argv[])
                 result = inputValidation(table, tempDate, couvert, resId);
                 if (result == 0)
                 {
-                    printf("incorrect data input\n");
-                    //valread=1;
+                    printf("incorrect data input\nPlease try again. \n");
+                   
                 }
             } while (result == 0);
-
-            strcat(resId, "*");
-            strcat(table, "*");
-            strcat(date, "*");
-            strcat(couvert, "*");
-            strcpy(bigClientResp, table);
-            strcat(bigClientResp, date);
-            strcat(bigClientResp, couvert);
-            strcat(bigClientResp, resId);
+            makeMsg(date,table,couvert,resId,bigClientResp);
             printf("%s", bigClientResp);
             send(sock, bigClientResp, BIGBUF, 0);
             valread = read(sock, serverResponse, MIDBUF);
@@ -142,6 +148,7 @@ int main(int argc, char const *argv[])
 
             send(sock, date, DATE, 0);
             valread = read(sock, serverResponse, MIDBUF);
+            printf("%d\n",valread);
             printf("%s\n", serverResponse);
             if (valread < 1)
             {
@@ -229,15 +236,14 @@ int main(int argc, char const *argv[])
                 break;
             }
         }
-        
     }
 
-if (valread < 1)
-{
-    shutdown(sock, SHUT_RDWR);
-    close(sock);
-    printf("disconnected\n");
-}
+    if (valread < 1)
+    {
+        shutdown(sock, SHUT_RDWR);
+        close(sock);
+        printf("disconnected\n");
+    }
 
-return 0;
+    return 0;
 }
