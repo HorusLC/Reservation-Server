@@ -30,7 +30,7 @@ int main(int argc, char const *argv[])
     char totalSUM[COUVERT];
     char smallBuf[SMALLBUF];
     struct timeval timeout;
-    timeout.tv_sec = 5;
+    timeout.tv_sec = 10;
     timeout.tv_usec = 0;
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
@@ -160,8 +160,9 @@ int main(int argc, char const *argv[])
                 printf("enter total Sum amount \n");
                 scanf("%s", totalSUM);
                 result = totalValidation(totalSUM);
-                if(result==0){
-                     printf("Entered sum is not accepted\nPlease try again\n");
+                if (result == 0)
+                {
+                    printf("Entered sum is not accepted\nPlease try again\n");
                 }
             } while (result == 0);
             strcat(totalSUM, "*");
@@ -171,55 +172,66 @@ int main(int argc, char const *argv[])
             send(sock, bigClientResp, BIGBUF, 0);
             valread = read(sock, serverResponse, MIDBUF);
             printf("%s\n", serverResponse);
-             if (valread < 1)
+            if (valread < 1)
             {
                 printf("Server is not responding\n");
                 break;
             }
         }
-       
-    
-    else if (!strcmp(clientResponse, "4"))
-    {
-        printf("enter ID of reservation that is to be deleted\n");
-        scanf("%s", resId);
-        send(sock, resId, RESID, 0);
-        valread = read(sock, serverResponse, MIDBUF);
-        if(valread<1){
-            printf("Server is not responding\n");
-                break;
-        }
-        printf("%s\n", serverResponse);
-    }
-    else if (!strcmp(clientResponse, "6"))
-    {
-        valread = read(sock, serverResponse, MIDBUF);
-        if(valread<1){
-            printf("Server is not responding\n");
-                break;
-        }
-        printf("%s\n", serverResponse);
-    }
-    else if (!strcmp(clientResponse, "7"))
-    {
-        char tempdate[DATE];
-        printf("enter date to check daily income\n");
-        scanf("%s", date);
-        strcpy(tempdate, date);
-        if (dateValidation(tempdate))
+
+        else if (!strcmp(clientResponse, "4"))
         {
+            printf("enter ID of reservation that is to be deleted\n");
+            scanf("%s", resId);
+            send(sock, resId, RESID, 0);
+            valread = read(sock, serverResponse, MIDBUF);
+            if (valread < 1)
+            {
+                printf("Server is not responding\n");
+                break;
+            }
+            printf("%s\n", serverResponse);
+        }
+        else if (!strcmp(clientResponse, "6"))
+        {
+            valread = read(sock, serverResponse, MIDBUF);
+            if (valread < 1)
+            {
+                printf("Server is not responding\n");
+                break;
+            }
+            printf("%s\n", serverResponse);
+        }
+        else if (!strcmp(clientResponse, "7"))
+        {
+            char tempdate[DATE];
+            short result;
+            do
+            {
+                memset(tempdate, 0, DATE);
+                memset(date, 0, DATE);
+                printf("enter date to check daily income\n");
+                scanf("%s", date);
+                strcpy(tempdate, date);
+                result = dateValidation(tempdate);
+                if (result == 0)
+                {
+                    printf("Date is not valid.\nPlease try again\n");
+                }
+            } while (result == 0);
             printf("%s date\n", date);
             send(sock, date, DATE, 0);
             valread = read(sock, serverResponse, MIDBUF);
             printf("%s\n", serverResponse);
+            if (valread < 1)
+            {
+                printf("Server is not responding\n");
+                break;
+            }
         }
-        else
-        {
-            printf("Invalid date\n Please try again\n");
-            valread = 1;
-        }
+        
     }
-}
+
 if (valread < 1)
 {
     shutdown(sock, SHUT_RDWR);

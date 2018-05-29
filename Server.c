@@ -87,7 +87,7 @@ void *client_handler(void *socket_desc)
                 pthread_mutex_lock(&lock);
                 head = addRes(r, head, response);
                 pthread_mutex_unlock(&lock);
-                //send(sock, response, MIDBUF, 0);
+                send(sock, response, MIDBUF, 0);
 
                 showReservations(head);
             }
