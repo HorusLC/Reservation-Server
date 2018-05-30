@@ -5,6 +5,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <errno.h>
 #include "validation.h"
 #define PORT 8081
 #define COUVERT 5
@@ -57,6 +58,7 @@ int main(int argc, char const *argv[])
     struct timeval timeout;
     timeout.tv_sec = 10;
     timeout.tv_usec = 0;
+    int ret;
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         printf("\n Socket creation error \n");
@@ -95,7 +97,6 @@ int main(int argc, char const *argv[])
         memset(bigClientResp, 0, BIGBUF);
         valread=0;
         showTables();
-       // printf("\nTABLES:\n For 5 people - 1, 3,12\n For 6 people - 2, 4, 6, 8\n For 10 people - 5, 7, 9, 10, 11\n");
         printf("\n-----MENU-----\n 1.Check date\n 2. Add new Reservation\n 3. Add Total Sum for existing Reservation\n 4. Delete a Reservation\n 5.Quit\n 6.Backup all Reservations\n 7,Check daily Income for Specified date\n");
         scanf("%s", clientResponse);
         send(sock, clientResponse, SMALLBUF, 0);    
