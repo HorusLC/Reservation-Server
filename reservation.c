@@ -41,7 +41,7 @@ void calculateDailyIncome(Reservation *head, char *response, char *date)
     strcat(response, sumArr);
 }
 
-Reservation *loadReservations(char *fname)
+Reservation *loadReservations(const char *fname)
 {
     Reservation *head = NULL;
     char table[TABLE];
@@ -113,11 +113,6 @@ _Bool saveReservations(Reservation *head, char *fname)
         return 0;
     }
 
-    /** if ((f=fopen(fname,"wb"))==NULL)
-    {
-        printf("I/O Error\n");
-        return 0;
-    }*/
 
     for (temp = head; temp != NULL; temp = temp->next)
 

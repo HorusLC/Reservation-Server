@@ -171,7 +171,8 @@ int main(int argc, char const *argv[])
     struct timeval timeout;
     timeout.tv_sec = 30;
     timeout.tv_usec = 0;
-    head = loadReservations("ResList.txt");
+   // head = loadReservations("ResList.txt");
+head=loadReservations(argv[1]);
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
     {

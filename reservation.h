@@ -21,7 +21,7 @@ typedef struct Res
 } Reservation;
 void calculateDailyIncome(Reservation *,char *,char*);
 _Bool getDate(int,char *);
-Reservation *loadReservations(char *);
+Reservation *loadReservations(const char *);
 _Bool saveReservations(Reservation*,char *);
 short getDeletionID(int ,char *);
 Reservation *deleteReservation(Reservation *,char *,char *);
